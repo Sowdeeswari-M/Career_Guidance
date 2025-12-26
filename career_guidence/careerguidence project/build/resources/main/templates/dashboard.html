@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Career Guidance Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; }
+        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem 0; box-shadow: 0 2px 20px rgba(0,0,0,0.1); }
+        .navbar .container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .navbar-brand { color: white; font-size: 1.5rem; font-weight: 700; text-decoration: none; }
+        .navbar-brand i { margin-right: 10px; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: rgba(255,255,255,0.9); text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: white; }
+        .user-menu { position: relative; }
+        .user-btn { background: rgba(255,255,255,0.2); color: white; border: none; padding: 10px 15px; border-radius: 25px; cursor: pointer; }
+        .main-content { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+        .welcome-card { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); color: white; padding: 40px; border-radius: 20px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(255,107,107,0.3); }
+        .welcome-card h1 { font-size: 2.5rem; margin-bottom: 10px; }
+        .welcome-card p { font-size: 1.2rem; opacity: 0.9; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 30px; border-radius: 15px; text-align: center; box-shadow: 0 5px 20px rgba(0,0,0,0.08); transition: transform 0.3s; }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-card i { font-size: 3rem; margin-bottom: 15px; }
+        .stat-card h3 { font-size: 2rem; margin-bottom: 5px; color: #333; }
+        .stat-card p { color: #666; font-weight: 500; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px; }
+        .card { background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); overflow: hidden; }
+        .card-header { background: #f8fafc; padding: 20px; border-bottom: 1px solid #e2e8f0; }
+        .card-header h3 { color: #333; font-size: 1.3rem; }
+        .card-body { padding: 20px; }
+        .empty-state { text-align: center; padding: 40px 20px; color: #666; }
+        .empty-state i { font-size: 4rem; margin-bottom: 20px; opacity: 0.5; }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-block; transition: all 0.3s; cursor: pointer; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.3); }
+        .btn-outline { background: transparent; border: 2px solid #667eea; color: #667eea; }
+        .btn-outline:hover { background: #667eea; color: white; }
+        .assessment-item, .recommendation-item { padding: 15px 0; border-bottom: 1px solid #f1f5f9; }
+        .assessment-item:last-child, .recommendation-item:last-child { border-bottom: none; }
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .badge-success { background: #10b981; color: white; }
+        .badge-warning { background: #f59e0b; color: white; }
+        .quick-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+        .quick-action { background: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 3px 15px rgba(0,0,0,0.08); transition: transform 0.3s; }
+        .quick-action:hover { transform: translateY(-3px); }
+        .quick-action i { font-size: 2rem; margin-bottom: 10px; }
+        @media (max-width: 768px) { 
+            .content-grid { grid-template-columns: 1fr; } 
+            .nav-links { display: none; }
+            .welcome-card h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/dashboard" class="navbar-brand">
+                <i class="fas fa-graduation-cap"></i>Career Guidance
+            </a>
+            <div class="nav-links">
+                <a href="/dashboard" class="active">Dashboard</a>
+                <a href="/assessment-form">Assessments</a>
+                <a href="/career-paths">Career Paths</a>
+                <a href="/mentor-request">Mentors</a>
+                <a href="/progress-summary">Progress</a>
+            </div>
+            <div class="user-menu">
+                <button class="user-btn" onclick="toggleUserMenu()">
+                    <i class="fas fa-user"></i> <span th:text="${user.fullName}">User</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="welcome-card">
+            <h1><i class="fas fa-sun"></i> Welcome back, <span th:text="${user.fullName}">Student</span>!</h1>
+            <p>Ready to advance your career journey today?</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fas fa-trophy" style="color: #f59e0b;"></i>
+                <h3 th:text="${progressSummary?.totalAchievements ?: 0}">0</h3>
+                <p>Achievements</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-star" style="color: #10b981;"></i>
+                <h3 th:text="${progressSummary?.totalPoints ?: 0}">0</h3>
+                <p>Points Earned</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-users" style="color: #3b82f6;"></i>
+                <h3 th:text="${activeMentorships != null ? #lists.size(activeMentorships) : 0}">0</h3>
+                <p>Active Mentorships</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-chart-line" style="color: #8b5cf6;"></i>
+                <h3 th:text="${progressSummary?.userLevel ?: 'Newcomer'}">Newcomer</h3>
+                <p>Current Level</p>
+            </div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-clipboard-check"></i> Recent Assessments</h3>
+                </div>
+                <div class="card-body">
+                    <div th:if="${recentAssessments == null or recentAssessments.isEmpty()}" class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <p>No assessments taken yet</p>
+                        <a href="/assessment-form" class="btn btn-primary">Take Your First Assessment</a>
+                    </div>
+                    <div th:if="${recentAssessments != null and !recentAssessments.isEmpty()}">
+                        <div th:each="attempt : ${recentAssessments}" class="assessment-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4 th:text="${attempt.skillAssessment?.assessmentTitle ?: 'Assessment'}">Assessment</h4>
+                                    <small style="color: #666;" th:text="${attempt.completionTime ? #temporals.format(attempt.completionTime, 'MMM dd, yyyy') : 'In Progress'}">Date</small>
+                                </div>
+                                <span class="badge" th:classappend="${attempt.isPassed} ? 'badge-success' : 'badge-warning'" 
+                                      th:text="${attempt.percentageScore ? #numbers.formatDecimal(attempt.percentageScore, 1, 1) + '%' : 'N/A'}">85%</span>
+                            </div>
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <a href="/assessment-form" class="btn btn-outline">Take Another Assessment</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-lightbulb"></i> Career Recommendations</h3>
+                </div>
+                <div class="card-body">
+                    <div th:if="${recommendations == null or recommendations.isEmpty()}" class="empty-state">
+                        <i class="fas fa-compass"></i>
+                        <p>Complete assessments to get personalized recommendations</p>
+                        <a href="/assessment-form" class="btn btn-primary">Start Assessment</a>
+                    </div>
+                    <div th:if="${recommendations != null and !recommendations.isEmpty()}">
+                        <div th:each="rec : ${recommendations}" class="recommendation-item">
+                            <h4 th:text="${rec.careerPath}">Career Path</h4>
+                            <p style="color: #666; margin: 5px 0;" th:text="${rec.careerDescription}">Description</p>
+                            <small style="color: #10b981; font-weight: 600;">
+                                <i class="fas fa-percentage"></i> <span th:text="${#numbers.formatDecimal(rec.matchPercentage, 1, 0)}">85</span>% match
+                            </small>
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <a href="/career-paths" class="btn btn-outline">View All Recommendations</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-rocket"></i> Quick Actions</h3>
+            </div>
+            <div class="card-body">
+                <div class="quick-actions">
+                    <a href="/assessment-form" class="quick-action">
+                        <i class="fas fa-clipboard-check" style="color: #667eea;"></i>
+                        <h4>Take Assessment</h4>
+                    </a>
+                    <a href="/career-paths" class="quick-action">
+                        <i class="fas fa-compass" style="color: #10b981;"></i>
+                        <h4>Explore Careers</h4>
+                    </a>
+                    <a href="/mentor-request" class="quick-action">
+                        <i class="fas fa-user-tie" style="color: #f59e0b;"></i>
+                        <h4>Find Mentor</h4>
+                    </a>
+                    <a href="/progress-summary" class="quick-action">
+                        <i class="fas fa-chart-bar" style="color: #8b5cf6;"></i>
+                        <h4>View Progress</h4>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function toggleUserMenu() {
+            // Simple logout for now
+            if(confirm('Do you want to logout?')) {
+                window.location.href = '/logout';
+            }
+        }
+    </script>
+</body>
+</html>

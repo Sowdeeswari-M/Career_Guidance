@@ -1,0 +1,188 @@
+{
+  "info": {
+    "name": "Career Guidance Platform API",
+    "description": "API collection for Career Guidance and Skill Development Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwt_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080/career-guidance/api"
+    },
+    {
+      "key": "jwt_token",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usernameOrEmail\": \"student@demo.com\",\n  \"password\": \"password\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newuser\",\n  \"emailAddress\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"confirmPassword\": \"password123\",\n  \"fullName\": \"New User\",\n  \"userRole\": \"STUDENT\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assessments",
+      "item": [
+        {
+          "name": "Get All Assessments",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/assessment",
+              "host": ["{{base_url}}"],
+              "path": ["assessment"]
+            }
+          }
+        },
+        {
+          "name": "Start Assessment",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/assessment/1/start",
+              "host": ["{{base_url}}"],
+              "path": ["assessment", "1", "start"]
+            }
+          }
+        },
+        {
+          "name": "Submit Assessment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assessmentId\": 1,\n  \"attemptId\": 1,\n  \"submittedAnswers\": [\n    {\n      \"questionId\": 1,\n      \"selectedOptionId\": 1\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/assessment/submit",
+              "host": ["{{base_url}}"],
+              "path": ["assessment", "submit"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Recommendations",
+      "item": [
+        {
+          "name": "Get Recommendations",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/recommendation",
+              "host": ["{{base_url}}"],
+              "path": ["recommendation"]
+            }
+          }
+        },
+        {
+          "name": "Generate Recommendations",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/recommendation/generate",
+              "host": ["{{base_url}}"],
+              "path": ["recommendation", "generate"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mentorship",
+      "item": [
+        {
+          "name": "Submit Mentorship Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mentorId\": 2,\n  \"requestMessage\": \"I would like mentorship in Java development\",\n  \"mentorshipGoals\": \"Improve programming skills and career guidance\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/mentorship/request",
+              "host": ["{{base_url}}"],
+              "path": ["mentorship", "request"]
+            }
+          }
+        },
+        {
+          "name": "Get My Requests",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/mentorship/my-requests",
+              "host": ["{{base_url}}"],
+              "path": ["mentorship", "my-requests"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

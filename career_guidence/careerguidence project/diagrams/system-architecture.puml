@@ -1,0 +1,87 @@
+@startuml Career Guidance System Architecture
+
+!define RECTANGLE class
+
+package "Presentation Layer" {
+  [Web Browser] as browser
+  [Thymeleaf Templates] as templates
+  [REST API] as api
+}
+
+package "Application Layer" {
+  [Web Controller] as webController
+  [REST Controller] as restController
+  [Authentication Filter] as authFilter
+}
+
+package "Business Layer" {
+  [User Service] as userService
+  [Assessment Service] as assessmentService
+  [Recommendation Service] as recommendationService
+  [Mentorship Service] as mentorshipService
+  [Progress Service] as progressService
+}
+
+package "Data Access Layer" {
+  [User Repository] as userRepo
+  [Assessment Repository] as assessmentRepo
+  [Recommendation Repository] as recommendationRepo
+  [Mentorship Repository] as mentorshipRepo
+  [Progress Repository] as progressRepo
+}
+
+package "Data Layer" {
+  database "MySQL Database" as db {
+    [user_accounts]
+    [skill_assessments]
+    [assessment_attempts]
+    [career_recommendations]
+    [mentorship_requests]
+    [progress_records]
+  }
+}
+
+package "External Services" {
+  [JWT Token Service] as jwtService
+  [Email Service] as emailService
+  [Cache Service] as cacheService
+}
+
+' Connections
+browser --> templates
+browser --> api
+templates --> webController
+api --> restController
+webController --> authFilter
+restController --> authFilter
+
+authFilter --> userService
+webController --> userService
+webController --> assessmentService
+webController --> recommendationService
+webController --> mentorshipService
+webController --> progressService
+
+restController --> userService
+restController --> assessmentService
+restController --> recommendationService
+restController --> mentorshipService
+restController --> progressService
+
+userService --> userRepo
+assessmentService --> assessmentRepo
+recommendationService --> recommendationRepo
+mentorshipService --> mentorshipRepo
+progressService --> progressRepo
+
+userRepo --> db
+assessmentRepo --> db
+recommendationRepo --> db
+mentorshipRepo --> db
+progressRepo --> db
+
+userService --> jwtService
+userService --> emailService
+recommendationService --> cacheService
+
+@enduml

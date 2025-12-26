@@ -1,0 +1,179 @@
+@startuml Career Guidance ER Diagram
+
+entity "user_accounts" as user {
+  * user_id : BIGINT <<PK>>
+  --
+  * username : VARCHAR(50) <<UK>>
+  * email_address : VARCHAR(100) <<UK>>
+  * password_hash : VARCHAR(255)
+  * full_name : VARCHAR(100)
+  * user_role : ENUM(STUDENT, MENTOR, ADMIN)
+  * is_account_active : BOOLEAN
+  * is_email_verified : BOOLEAN
+  phone_number : VARCHAR(20)
+  profile_bio : TEXT
+  profile_image_url : VARCHAR(255)
+  * registration_date : TIMESTAMP
+  last_login_time : TIMESTAMP
+  --
+  ' Student fields
+  current_education_level : VARCHAR(50)
+  field_of_study : VARCHAR(100)
+  career_interests : TEXT
+  --
+  ' Mentor fields
+  professional_title : VARCHAR(100)
+  company_name : VARCHAR(100)
+  years_of_experience : INT
+  expertise_areas : TEXT
+}
+
+entity "skill_assessments" as assessment {
+  * assessment_id : BIGINT <<PK>>
+  --
+  * assessment_title : VARCHAR(200)
+  assessment_description : TEXT
+  * skill_category : VARCHAR(100)
+  * duration_minutes : INT
+  * passing_score : DECIMAL(5,2)
+  * difficulty_level : ENUM(BEGINNER, INTERMEDIATE, ADVANCED, EXPERT)
+  * is_active : BOOLEAN
+  * created_date : TIMESTAMP
+  last_modified_date : TIMESTAMP
+}
+
+entity "assessment_questions" as question {
+  * question_id : BIGINT <<PK>>
+  --
+  * question_text : TEXT
+  * question_type : ENUM(MULTIPLE_CHOICE, TRUE_FALSE, SHORT_ANSWER, ESSAY)
+  * points_value : INT
+  * question_order : INT
+  * assessment_id : BIGINT <<FK>>
+}
+
+entity "question_options" as option {
+  * option_id : BIGINT <<PK>>
+  --
+  * option_text : TEXT
+  * is_correct_answer : BOOLEAN
+  * option_order : INT
+  * question_id : BIGINT <<FK>>
+}
+
+entity "assessment_attempts" as attempt {
+  * attempt_id : BIGINT <<PK>>
+  --
+  * user_id : BIGINT <<FK>>
+  * assessment_id : BIGINT <<FK>>
+  * start_time : TIMESTAMP
+  completion_time : TIMESTAMP
+  * achieved_score : DECIMAL(5,2)
+  * total_possible_score : DECIMAL(5,2)
+  * percentage_score : DECIMAL(5,2)
+  * attempt_status : ENUM(IN_PROGRESS, COMPLETED, ABANDONED, EXPIRED)
+  * is_passed : BOOLEAN
+  time_spent_minutes : INT
+  feedback_comments : TEXT
+}
+
+entity "student_answers" as answer {
+  * answer_id : BIGINT <<PK>>
+  --
+  * attempt_id : BIGINT <<FK>>
+  * question_id : BIGINT <<FK>>
+  selected_option_id : BIGINT <<FK>>
+  text_answer : TEXT
+  * is_correct : BOOLEAN
+  * points_earned : DECIMAL(5,2)
+  * answered_at : TIMESTAMP
+}
+
+entity "career_recommendations" as recommendation {
+  * recommendation_id : BIGINT <<PK>>
+  --
+  * user_id : BIGINT <<FK>>
+  * career_path : VARCHAR(200)
+  career_description : TEXT
+  * match_percentage : DECIMAL(5,2)
+  required_skills : TEXT
+  recommended_courses : TEXT
+  industry_outlook : TEXT
+  salary_range : VARCHAR(100)
+  * recommendation_status : ENUM(ACTIVE, ARCHIVED, DISMISSED)
+  * generated_date : TIMESTAMP
+  last_updated_date : TIMESTAMP
+  recommendation_reason : TEXT
+}
+
+entity "mentorship_requests" as mentorship {
+  * request_id : BIGINT <<PK>>
+  --
+  * student_id : BIGINT <<FK>>
+  mentor_id : BIGINT <<FK>>
+  * request_message : TEXT
+  mentorship_goals : TEXT
+  preferred_meeting_schedule : TEXT
+  * request_status : ENUM(PENDING, ACCEPTED, REJECTED, CANCELLED)
+  * request_date : TIMESTAMP
+  response_date : TIMESTAMP
+  mentor_response : TEXT
+  mentorship_start_date : TIMESTAMP
+  mentorship_end_date : TIMESTAMP
+  * is_active : BOOLEAN
+}
+
+entity "mentorship_sessions" as session {
+  * session_id : BIGINT <<PK>>
+  --
+  * request_id : BIGINT <<FK>>
+  * session_title : VARCHAR(200)
+  session_description : TEXT
+  * scheduled_date_time : TIMESTAMP
+  duration_minutes : INT
+  * session_status : ENUM(SCHEDULED, IN_PROGRESS, COMPLETED, CANCELLED, NO_SHOW)
+  session_notes : TEXT
+  student_feedback : TEXT
+  mentor_feedback : TEXT
+  actual_start_time : TIMESTAMP
+  actual_end_time : TIMESTAMP
+  * created_date : TIMESTAMP
+}
+
+entity "progress_records" as progress {
+  * progress_id : BIGINT <<PK>>
+  --
+  * user_id : BIGINT <<FK>>
+  * achievement_type : VARCHAR(100)
+  * achievement_title : VARCHAR(200)
+  achievement_description : TEXT
+  * achieved_date : TIMESTAMP
+  * points_earned : INT
+  * achievement_category : ENUM(ASSESSMENT_COMPLETION, SKILL_IMPROVEMENT, COURSE_COMPLETION, CERTIFICATION, MENTORSHIP_MILESTONE, CAREER_MILESTONE)
+  skills_improved : TEXT
+  certificate_url : VARCHAR(255)
+  * is_verified : BOOLEAN
+  verification_date : TIMESTAMP
+  verification_notes : TEXT
+}
+
+' Relationships
+user ||--o{ attempt : "takes"
+user ||--o{ recommendation : "receives"
+user ||--o{ mentorship : "student requests"
+user ||--o{ mentorship : "mentor accepts"
+user ||--o{ progress : "achieves"
+
+assessment ||--o{ question : "contains"
+assessment ||--o{ attempt : "attempted in"
+
+question ||--o{ option : "has"
+question ||--o{ answer : "answered in"
+
+attempt ||--o{ answer : "contains"
+
+option ||--o{ answer : "selected in"
+
+mentorship ||--o{ session : "includes"
+
+@enduml

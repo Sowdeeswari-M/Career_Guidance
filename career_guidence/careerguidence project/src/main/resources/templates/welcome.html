@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Guidance Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        .hero { min-height: 100vh; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><polygon fill="%23ffffff08" points="0,1000 1000,0 1000,1000"/></svg>'); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+        .hero-content { text-align: center; color: white; }
+        .hero h1 { font-size: 3.5rem; font-weight: 700; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+        .hero p { font-size: 1.3rem; margin-bottom: 3rem; opacity: 0.9; }
+        .cta-buttons { display: flex; gap: 20px; justify-content: center; margin-bottom: 4rem; }
+        .btn { padding: 15px 30px; border: none; border-radius: 50px; font-size: 1.1rem; font-weight: 600; text-decoration: none; transition: all 0.3s ease; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-primary { background: #ff6b6b; color: white; box-shadow: 0 8px 25px rgba(255,107,107,0.3); }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(255,107,107,0.4); }
+        .btn-secondary { background: rgba(255,255,255,0.2); color: white; border: 2px solid rgba(255,255,255,0.3); backdrop-filter: blur(10px); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.3); transform: translateY(-3px); }
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 2rem; }
+        .feature-card { background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 30px; text-align: center; border: 1px solid rgba(255,255,255,0.2); transition: transform 0.3s ease; }
+        .feature-card:hover { transform: translateY(-10px); }
+        .feature-icon { font-size: 3rem; margin-bottom: 20px; color: #ff6b6b; }
+        .feature-card h3 { color: white; margin-bottom: 15px; font-size: 1.3rem; }
+        .feature-card p { color: rgba(255,255,255,0.8); line-height: 1.6; }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .cta-buttons { flex-direction: column; align-items: center; }
+            .btn { width: 200px; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1><i class="fas fa-rocket"></i> Career Guidance Platform</h1>
+                <p>Unlock your potential and shape your future with personalized career guidance</p>
+                
+                <div class="cta-buttons">
+                    <a href="/login" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i> Get Started
+                    </a>
+                    <a href="/register" class="btn btn-secondary">
+                        <i class="fas fa-user-plus"></i> Join Now
+                    </a>
+                </div>
+                
+                <div class="features">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Skill Assessments</h3>
+                        <p>Discover your strengths with comprehensive skill evaluations and personalized feedback</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-route"></i></div>
+                        <h3>Career Paths</h3>
+                        <p>Explore tailored career recommendations based on your interests and abilities</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-users"></i></div>
+                        <h3>Expert Mentorship</h3>
+                        <p>Connect with industry professionals for guidance and career advancement</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-trophy"></i></div>
+                        <h3>Progress Tracking</h3>
+                        <p>Monitor your growth and celebrate achievements on your career journey</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

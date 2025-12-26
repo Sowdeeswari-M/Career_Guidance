@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Guidance Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; }
+        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 1rem 0; box-shadow: 0 2px 20px rgba(0,0,0,0.1); }
+        .navbar .container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .navbar-brand { color: white; font-size: 1.5rem; font-weight: 700; text-decoration: none; }
+        .navbar-brand i { margin-right: 10px; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: rgba(255,255,255,0.9); text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: white; }
+        .user-menu { position: relative; }
+        .user-btn { background: rgba(255,255,255,0.2); color: white; border: none; padding: 10px 15px; border-radius: 25px; cursor: pointer; }
+        .main-content { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+        .card { background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); padding: 40px; text-align: center; }
+        .card i { font-size: 4rem; color: #667eea; margin-bottom: 20px; }
+        .card h1 { color: #333; margin-bottom: 20px; }
+        .card p { color: #666; font-size: 1.2rem; margin-bottom: 30px; }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-block; transition: all 0.3s; cursor: pointer; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(102,126,234,0.3); }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/dashboard" class="navbar-brand">
+                <i class="fas fa-graduation-cap"></i>Career Guidance
+            </a>
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/assessment-form">Assessments</a>
+                <a href="/career-paths">Career Paths</a>
+                <a href="/mentor-request">Mentors</a>
+                <a href="/progress-summary">Progress</a>
+            </div>
+            <div class="user-menu">
+                <button class="user-btn" onclick="toggleUserMenu()">
+                    <i class="fas fa-user"></i> <span th:text="${user.fullName}">User</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="card">
+            <i class="fas fa-cogs"></i>
+            <h1 th:text="${message}">Feature Coming Soon!</h1>
+            <p>This feature is currently under development. Please check back later.</p>
+            <a href="/dashboard" class="btn btn-primary">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        function toggleUserMenu() {
+            if(confirm('Do you want to logout?')) {
+                window.location.href = '/logout';
+            }
+        }
+    </script>
+</body>
+</html>

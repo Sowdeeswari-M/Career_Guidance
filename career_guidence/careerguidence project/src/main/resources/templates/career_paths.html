@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Paths - Career Guidance Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard">
+                <i class="fas fa-graduation-cap me-2"></i>Career Guidance
+            </a>
+            
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/assessment-form">Take Assessment</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/career-paths">Career Paths</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/mentor-request">Find Mentor</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/progress-summary">My Progress</a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">
+                            <i class="fas fa-sign-out-alt me-1"></i>Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container mt-4">
+        <!-- Header -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-gradient-success text-white">
+                    <div class="card-body">
+                        <h2 class="card-title">
+                            <i class="fas fa-compass me-2"></i>Your Career Path Recommendations
+                        </h2>
+                        <p class="card-text mb-0">Discover career opportunities tailored to your skills and interests</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Personalized Recommendations -->
+        <div class="row mb-4" th:if="${!#lists.isEmpty(recommendations)}">
+            <div class="col-12">
+                <h4 class="mb-3">
+                    <i class="fas fa-star text-warning me-2"></i>Recommended for You
+                </h4>
+            </div>
+            
+            <div th:each="recommendation : ${recommendations}" class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-header bg-light border-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0" th:text="${recommendation.careerPath}">Career Path</h5>
+                            <span class="badge bg-success" th:text="${#numbers.formatDecimal(recommendation.matchPercentage, 1, 0)} + '% match'">85% match</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text text-muted" th:text="${recommendation.careerDescription}">Career description</p>
+                        
+                        <div class="mb-3">
+                            <h6 class="text-primary">
+                                <i class="fas fa-tools me-1"></i>Required Skills
+                            </h6>
+                            <p class="small" th:text="${recommendation.requiredSkills}">Skills list</p>
+                        </div>
+                        
+                        <div class="mb-3" th:if="${recommendation.salaryRange}">
+                            <h6 class="text-success">
+                                <i class="fas fa-dollar-sign me-1"></i>Salary Range
+                            </h6>
+                            <p class="small" th:text="${recommendation.salaryRange}">Salary range</p>
+                        </div>
+                        
+                        <div class="mb-3" th:if="${recommendation.industryOutlook}">
+                            <h6 class="text-info">
+                                <i class="fas fa-chart-line me-1"></i>Industry Outlook
+                            </h6>
+                            <p class="small" th:text="${recommendation.industryOutlook}">Industry outlook</p>
+                        </div>
+                        
+                        <div th:if="${recommendation.recommendedCourses}">
+                            <h6 class="text-warning">
+                                <i class="fas fa-graduation-cap me-1"></i>Recommended Courses
+                            </h6>
+                            <p class="small" th:text="${recommendation.recommendedCourses}">Course recommendations</p>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0">
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-outline-primary btn-sm" onclick="showCareerDetails(this)" 
+                                    th:data-career="${recommendation.careerPath}">
+                                <i class="fas fa-info-circle me-1"></i>Learn More
+                            </button>
+                            <button class="btn btn-outline-secondary btn-sm" onclick="dismissRecommendation(this)"
+                                    th:data-id="${recommendation.recommendationId}">
+                                <i class="fas fa-times me-1"></i>Dismiss
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- No Recommendations Message -->
+        <div class="row" th:if="${#lists.isEmpty(recommendations)}">
+            <div class="col-12">
+                <div class="card text-center">
+                    <div class="card-body py-5">
+                        <i class="fas fa-compass fa-4x text-muted mb-4"></i>
+                        <h4 class="text-muted">No Career Recommendations Yet</h4>
+                        <p class="text-muted mb-4">Complete skill assessments to get personalized career path recommendations</p>
+                        <a href="/assessment-form" class="btn btn-primary">
+                            <i class="fas fa-clipboard-check me-2"></i>Take Your First Assessment
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- All Career Paths -->
+        <div class="row mt-5" th:if="${!#lists.isEmpty(allCareerPaths)}">
+            <div class="col-12">
+                <h4 class="mb-3">
+                    <i class="fas fa-list me-2"></i>Explore All Career Paths
+                </h4>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div th:each="careerPath : ${allCareerPaths}" class="col-md-4 mb-2">
+                                <div class="d-flex align-items-center p-2 border rounded">
+                                    <i class="fas fa-briefcase text-primary me-3"></i>
+                                    <span th:text="${careerPath}">Career Path</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Ready to Take the Next Step?</h5>
+                        <p class="card-text">Enhance your career prospects with assessments and mentorship</p>
+                        <div class="btn-group" role="group">
+                            <a href="/assessment-form" class="btn btn-primary">
+                                <i class="fas fa-clipboard-check me-2"></i>Take Assessment
+                            </a>
+                            <a href="/mentor-request" class="btn btn-success">
+                                <i class="fas fa-user-tie me-2"></i>Find Mentor
+                            </a>
+                            <a href="/progress-summary" class="btn btn-info">
+                                <i class="fas fa-chart-bar me-2"></i>View Progress
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Career Details Modal -->
+    <div class="modal fade" id="careerDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="careerModalTitle">Career Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="careerModalBody">
+                    <!-- Career details will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="/mentor-request" class="btn btn-primary">Find Mentor for This Career</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showCareerDetails(button) {
+            const careerPath = button.getAttribute('data-career');
+            document.getElementById('careerModalTitle').textContent = careerPath + ' - Career Details';
+            
+            // In a real application, you would fetch detailed career information
+            document.getElementById('careerModalBody').innerHTML = `
+                <div class="text-center">
+                    <i class="fas fa-info-circle fa-3x text-primary mb-3"></i>
+                    <h5>Detailed information about ${careerPath}</h5>
+                    <p class="text-muted">Career details, growth prospects, and learning resources would be displayed here.</p>
+                </div>
+            `;
+            
+            new bootstrap.Modal(document.getElementById('careerDetailsModal')).show();
+        }
+        
+        function dismissRecommendation(button) {
+            const recommendationId = button.getAttribute('data-id');
+            
+            if (confirm('Are you sure you want to dismiss this recommendation?')) {
+                // In a real application, you would make an API call to dismiss the recommendation
+                button.closest('.col-md-6').style.display = 'none';
+                
+                // Show success message
+                const alert = document.createElement('div');
+                alert.className = 'alert alert-success alert-dismissible fade show';
+                alert.innerHTML = `
+                    Recommendation dismissed successfully.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                document.querySelector('.container').insertBefore(alert, document.querySelector('.container').firstChild);
+            }
+        }
+    </script>
+</body>
+</html>

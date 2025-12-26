@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Mentorship - Career Guidance Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; }
+        .navbar { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); padding: 1rem 0; box-shadow: 0 2px 20px rgba(0,0,0,0.1); }
+        .navbar .container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
+        .navbar-brand { color: white; font-size: 1.5rem; font-weight: 700; text-decoration: none; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: rgba(255,255,255,0.9); text-decoration: none; font-weight: 500; }
+        .nav-links a:hover { color: white; }
+        .user-btn { background: rgba(255,255,255,0.2); color: white; border: none; padding: 10px 15px; border-radius: 25px; cursor: pointer; }
+        .main-content { max-width: 800px; margin: 0 auto; padding: 30px 20px; }
+        .card { background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); padding: 30px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; color: #333; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #f59e0b; }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; font-weight: 600; text-decoration: none; display: inline-block; transition: all 0.3s; cursor: pointer; margin-right: 10px; }
+        .btn-primary { background: #f59e0b; color: white; }
+        .btn-secondary { background: #6b7280; color: white; }
+        .btn:hover { transform: translateY(-2px); }
+        textarea { resize: vertical; min-height: 100px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="/dashboard" class="navbar-brand">
+                <i class="fas fa-chalkboard-teacher"></i>Career Guidance - Mentor
+            </a>
+            <div class="nav-links">
+                <a href="/dashboard">Dashboard</a>
+                <a href="/mentor/requests">Requests</a>
+                <a href="/mentor/sessions">Sessions</a>
+                <a href="/mentor/students">Students</a>
+            </div>
+            <div class="user-menu">
+                <button class="user-btn" onclick="logout()">
+                    <i class="fas fa-user-tie"></i> <span th:text="${user.fullName}">Mentor</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="main-content">
+        <div class="card">
+            <h2><i class="fas fa-compass"></i> Assign New Mentorship</h2>
+            <form action="/mentor/mentorship/save" method="post">
+                <div class="form-group">
+                    <label for="student">Select Student</label>
+                    <select id="student" name="studentId" required>
+                        <option value="">Choose a student</option>
+                        <option th:each="student : ${students}" 
+                                th:value="${student.userId}" 
+                                th:text="${student.fullName + ' - ' + (student.fieldOfStudy ?: 'Student')}">Student Name</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="topic">Mentorship Topic</label>
+                    <input type="text" id="topic" name="topic" required placeholder="e.g., Career Development, Technical Skills">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate" name="startDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input type="date" id="endDate" name="endDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description & Goals</label>
+                    <textarea id="description" name="description" required placeholder="Describe the mentorship goals, expectations, and planned activities"></textarea>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-user-plus"></i> Assign Mentorship
+                    </button>
+                    <a href="/dashboard" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        function logout() {
+            if(confirm('Do you want to logout?')) {
+                window.location.href = '/logout';
+            }
+        }
+        
+        // Set minimum date to today
+        document.getElementById('startDate').min = new Date().toISOString().split('T')[0];
+        document.getElementById('endDate').min = new Date().toISOString().split('T')[0];
+        
+        // Ensure end date is after start date
+        document.getElementById('startDate').addEventListener('change', function() {
+            document.getElementById('endDate').min = this.value;
+        });
+    </script>
+</body>
+</html>

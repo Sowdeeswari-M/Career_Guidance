@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Career Guidance Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8fafc; }
+        .container { max-width: 600px; margin: 100px auto; padding: 40px; background: white; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); text-align: center; }
+        .error-icon { font-size: 4rem; color: #ef4444; margin-bottom: 20px; }
+        h2 { color: #333; margin-bottom: 20px; }
+        p { color: #666; font-size: 1.1rem; margin-bottom: 30px; }
+        .btn { padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: transform 0.3s; }
+        .btn:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <i class="fas fa-exclamation-triangle error-icon"></i>
+        <h2>Something went wrong</h2>
+        <p th:text="${errorMessage}">An unexpected error occurred</p>
+        <a href="/dashboard" class="btn">
+            <i class="fas fa-arrow-left"></i> Go Back to Dashboard
+        </a>
+    </div>
+</body>
+</html>
